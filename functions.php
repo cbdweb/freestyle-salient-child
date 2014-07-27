@@ -314,8 +314,12 @@ function fs_signature_custom_columns($column) {
             break;
         case "fs_col_referrer":
             preg_match( '@^(?:http([s]*)://)?([^/]+)@i', $custom["fs_signature_referrer"][0], $matches );
-            $host = $matches[2];            
-            echo "<a href='" . $custom["fs_signature_referrer"][0] . "' target='_blank'>http" . $matches[1] . "://" . $host . "</a>";
+            $host = $matches[2];
+            if( $host ) {
+                echo "<a href='" . $custom["fs_signature_referrer"][0] . "' target='_blank'>http" . $matches[1] . "://" . $host . "</a>";
+            } else {
+                echo "&nbsp;";
+            }
             break;
         case "fs_col_moderate":
             echo $custom["fs_signature_moderate"][0];
