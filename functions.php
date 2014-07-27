@@ -75,7 +75,7 @@ function fs_confirmSignature() {
     }
     
     $custom = get_post_custom( $id );
-    if ( $secretkey !== $custom [ 'fs_signature_secret' ] ) {
+    if ( $secretkey !== $custom [ 'fs_signature_secret' ][0] ) {
         echo json_encode ( array ( 'error'=>'To edit or confirm a signature, you must click on a link in an email from us. You can only save once, using the link, after which you need to get a new email.'
             . '<br\><a href="' . get_site_url() . '/confirm">Click here to get a new email link</a>.' ) );
         die;
