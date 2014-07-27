@@ -313,7 +313,9 @@ function fs_signature_custom_columns($column) {
             echo $custom["fs_signature_campaign"][0];
             break;
         case "fs_col_referrer":
-            echo $custom["fs_signature_referrer"][0];
+            preg_match('/([a-zA-Z]+):\/\/([a-zA-Z]+)\/(.)+/', $custom["fs_signature_referrer"][0], $matches);
+            list( $fullurl, $protocol, $server, $path ) = $matches;
+            echo "<a href='" . $custom["fs_signature_referrer"][0] . "' target='_blank'>" . $protocol . "://" . $server . "</a>";
             break;
         case "fs_col_moderate":
             echo $custom["fs_signature_moderate"][0];
