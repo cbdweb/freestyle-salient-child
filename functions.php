@@ -99,6 +99,7 @@ function fs_newsletter_meta() {
                     <option value="members"<?=($meta_post_type==="members" ? " selected" : "")?>>Members</option>
                     <option value="signatures"<?=($meta_post_type==="signatures" ? " selected" : "")?>>Signatures</option>
                 </select>
+                <span class="smallfont">Fields below are ignored if "members" is chosen</span>
             </li>
             <li><label>Newsletter level</label>
                 <input name="fs_newsletter_newsletter_type[]" type="checkbox" value="y"
@@ -121,7 +122,9 @@ function fs_newsletter_meta() {
                     <?php } ?>
                 </select>
             </li>
-            <li><label>State</label></li>
+            <li><label>State</label>
+                <span class="smallfont">State is ignored unless Australia is chosen above</span>
+            </li>
             <?php 
             $fs_states = fs_states();
             foreach($fs_states as $ab => $title ) { ?>
@@ -155,8 +158,8 @@ function save_fs_newsletter(){
     // - convert back to unix & update post
 
     update_post_meta($post->ID, "fs_newsletter_country", $_POST["fs_newsletter_country"] );
-    update_post_meta($post->ID, "fs_newsletter_state", $_POST["fs_newsletter_state"] );
-    update_post_meta($post->ID, "fs_newsletter_newsletter_type", $_POST["fs_newsletter_newsletter_type"] );
+    update_post_meta($post->ID, "fs_newsletter_state", $_POST["fs_newsletter_state"] ); // is an array of states
+    update_post_meta($post->ID, "fs_newsletter_newsletter_type", $_POST["fs_newsletter_newsletter_type"] ); // is an array of newsletter preference types
     update_post_meta($post->ID, "fs_newsletter_post_type", $_POST["fs_newsletter_post_type"] );
 }
 
