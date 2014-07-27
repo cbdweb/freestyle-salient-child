@@ -3,7 +3,7 @@
 .fs-meta ul li { height: 20px; clear:both; margin: 0 0 15px 0;}
 .fs-meta ul li label { width: 160px; display:block; float:left; padding-top:4px; }
 .fs-meta ul li input { width:125px; display:block; float:left; }
-.fs-meta ul li input[type=radio] { width: auto; margin-top: 4px;}
+.fs-meta ul li input[type=radio], .fs-meta ul li input[type=checkbox] { width: auto; margin-top: 4px;}
 .fs-meta ul li em { width: 200px; display:block; float:left; color:gray; margin-left:10px; padding-top: 4px}
 
 .fs-meta ul li input[name=fs_signature_email], .fs-meta ul li input[name=fs_signature_referrer] { width: 250px;}
