@@ -313,9 +313,9 @@ function fs_signature_custom_columns($column) {
             echo $custom["fs_signature_campaign"][0];
             break;
         case "fs_col_referrer":
-            preg_match('/([a-zA-Z]+):\/\/([a-zA-Z]+)\/(.)+/', $custom["fs_signature_referrer"][0], $matches);
-            list( $fullurl, $protocol, $server, $path ) = $matches;
-            echo "<a href='" . $custom["fs_signature_referrer"][0] . "' target='_blank'>" . $protocol . "://" . $server . "</a>";
+            preg_match( '@^(?:http([s]*)://)?([^/]+)@i', $custom["fs_signature_referrer"][0], $matches );
+            $host = $matches[2];            
+            echo "<a href='" . $custom["fs_signature_referrer"][0] . "' target='_blank'>http" . $matches[1] . "://" . $host . "</a>";
             break;
         case "fs_col_moderate":
             echo $custom["fs_signature_moderate"][0];
@@ -419,6 +419,7 @@ function save_fs_signature(){
     if(!isset($_POST["fs_signature_email"])):
         return $post;
     endif;
+    update_post_meta( $post->ID, "fs_signature_referrer", $_POST["fs_signature_referrer"] );
     update_post_meta($post->ID, "fs_signature_email", $_POST["fs_signature_email"]);
     update_post_meta($post->ID, "fs_signature_public", $_POST["fs_signature_public"]);
     update_post_meta($post->ID, "fs_signature_moderate", $_POST["fs_signature_moderate"]);
