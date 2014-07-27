@@ -29,7 +29,6 @@ if($secret!=="") {
                 $update = $sig->post_status === "private";
                 if( $sig->post_title !== "" && $custom['fs_signature_country'][0] ) {
                     $found = true;
-                    delete_post_meta ( $post_id, 'fs_signature_secret' ); // use once
                     $sig->post_status = "private";
                     if( ! $update ) update_post_meta( $post_id, 'fs_signature_registered', date('Y-m-d') );
                     wp_update_post ( $sig );
@@ -68,6 +67,7 @@ if($secret!=="") {
                                 </tbody>
                             </table>
                             <input name="action" value="reconfirmSignature" type="hidden">
+                            <input name="secretkey" value="<?=$secret;?>" type="hidden">
                             <?php wp_nonce_field( "fs_reconfirm_sig", "fs_nonce" );?>
                         </form>
                         <P>Otherwise, send an email to <a href='mailto:info@freestylecyclists.org'>info@freestylecyclists.org</a> so we can help you sort it out.</P>

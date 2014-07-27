@@ -1,19 +1,16 @@
 <?php
-/* enter the full email address you want displayed 
-http://premium.wpmudev.org/blog/wordpress-email-settings/
- from http://miloguide.com/filter-hooks/wp_mail_from/ */
-function xyz_filter_wp_mail_from($email){
-    return "info@freestylecyclists.org";
-}
-add_filter("wp_mail_from", "xyz_filter_wp_mail_from");
-
-function signature_register_js() {	
+/*
+ * Signatures - custom post type and facilities to support the big petition
+ */
+function signature_register_js() {	// support for signup form, which appears on two pages and in a popup
     wp_register_script('signature',  get_stylesheet_directory_uri() . '/js/signature.js', 'jquery');
     wp_enqueue_script('signature');
 }
 add_action('wp_enqueue_scripts', 'signature_register_js');
-            
-
+/*
+ * Signatures AJAX calls
+ */
+// request to edit an existing signature from page /confirm without a secret key in the query_string
 add_action( 'wp_ajax_reconfirmSignature', 'fs_reconfirmSignature' );
 add_action( 'wp_ajax_nopriv_reconfirmSignature', 'fs_reconfirmSignature' );
 
@@ -29,7 +26,7 @@ function fs_reconfirmSignature() {
     }
 
     global $wpdb;
-    $query = $wpdb->prepare(
+    $query = $wpdb->prepare( // find the custom post for this sig
         "SELECT p.ID FROM " . $wpdb->posts . " p LEFT JOIN " . $wpdb->postmeta . " m ON m.post_id=p.ID WHERE m.meta_key='fs_signature_email' AND m.meta_value=%s",
             $email );
     $id = $wpdb->get_col( $query );
@@ -53,17 +50,21 @@ function fs_reconfirmSignature() {
     echo json_encode ( array( 'success' => 'We have sent you a new email, you can click on the link there to update your details.' ) );
     die;
 }
-
+/*
+ * Signature - confirming a signature or updating it
+ */
 add_action( 'wp_ajax_confirmSignature', 'fs_confirmSignature' );
 add_action( 'wp_ajax_nopriv_confirmSignature', 'fs_confirmSignature' );
 
 function fs_confirmSignature() {
+    // fields edited by signatory:
     $fs_signature_public = $_POST['fs_signature_public'];
     $fs_signature_newsletter = $_POST['fs_signature_newsletter'];
     $fs_signature_country = $_POST['fs_signature_country'];
     $fs_signature_state = $_POST['fs_signature_state'];
     $excerpt = $_POST['excerpt'];
     $id = $_POST['id'];
+    $secretkey = $_POST['secretkey'];
     if (
         ! isset( $_POST['fs_nonce'] ) 
         || ! wp_verify_nonce( $_POST['fs_nonce'], 'fs_confirm_sig_' . $id )
@@ -71,6 +72,13 @@ function fs_confirmSignature() {
 
        echo json_encode( array( 'error'=>'Sorry, your nonce did not verify.' ) );
        die;
+    }
+    
+    $custom = get_post_custom( $id );
+    if ( $secretkey !== $custom [ 'fs_signature_secret' ] ) {
+        echo json_encode ( array ( 'error'=>'To edit or confirm a signature, you must click on a link in an email from us. You can only save once, using the link, after which you need to get a new email.'
+            . '<br\><a href="' . get_site_url() . '/confirm">Click here to get a new email link</a>.' ) );
+        die;
     }
     
     $post = get_post( $id, "OBJECT" );
@@ -90,7 +98,9 @@ function fs_confirmSignature() {
     echo json_encode ( array( 'success' => 'Thanks for updating your details.' ) );
     die;
 }
-
+/*
+ * AJAX call to add a new signature
+ */
 add_action( 'wp_ajax_newSignature', 'fs_newSignature' );
 add_action( 'wp_ajax_nopriv_newSignature', 'fs_newSignature' );
 
@@ -117,11 +127,12 @@ function fs_newSignature() {
         die;
     }
     global $wpdb;
+    // check to see this email isn't already on the petition
     $query = $wpdb->prepare('SELECT p.post_status as `status` FROM ' . $wpdb->postmeta . ' m LEFT JOIN ' . $wpdb->posts . ' p ON p.ID=m.post_id WHERE m.meta_key="fs_signature_email" AND m.meta_value="' . $fs_signature_email . '"', array() );
     $results = $wpdb->get_results( $query );
     $found = false;
     foreach( $results as $row ) {
-        if( $row->status === 'private' ) $found = true;
+        if( $row->status === 'private' ) $found = true; // for this check we ignore drafts, so people can try again
     }
     if($found) {
         echo json_encode( array('error'=>'That email address is already registered') );
@@ -192,12 +203,20 @@ function fs_newSignature() {
     echo json_encode( array( 'success'=>'You have successfully registered your support. Look for an email from us and click on the link to confirm your email address - until then we can\'t count you.' ) );
     die();
 }
-
+/*
+ * Give ourselves control over admin styles
+ */
 add_action( 'wp_print_styles', 'my_deregister_styles', 100 );
 function my_deregister_styles() {
 	wp_deregister_style( 'wp-admin' );
 }
-
+function add_admin_styles() {
+    wp_enqueue_style( 'admin-style', get_stylesheet_directory_uri() . '/css/admin-style.css' );
+}
+add_action('admin_init', 'add_admin_styles' );
+/*
+ * Create custom post type to store signatures
+ */
 add_action( 'init', 'create_fs_signature' );
 function create_fs_signature() {
 	$labels = array(
@@ -232,7 +251,9 @@ function create_fs_signature() {
         )
     );
 }
-
+/*
+ * specify columns in admin view of signatures custom post listing
+ */
 add_filter ( "manage_edit-fs_signature_columns", "fs_signature_edit_columns" );
 add_action ( "manage_posts_custom_column", "fs_signature_custom_columns" );
 function fs_signature_edit_columns($columns) {
@@ -302,7 +323,9 @@ function fs_signature_custom_columns($column) {
             break;
     }
 }
-
+/*
+ * Add fields for admin to edit signature custom post
+ */
 add_action( 'admin_init', 'fs_signature_create' );
 function fs_signature_create() {
     add_meta_box('fs_signature_meta', 'Signature', 'fs_signature_meta', 'fs_signature' );
@@ -424,11 +447,9 @@ function signature_updated_messages( $messages ) {
  
   return $messages;
 }
-function add_admin_styles() {
-    wp_enqueue_style( 'admin-style', get_stylesheet_directory_uri() . '/css/admin-style.css' );
-}
-add_action('admin_init', 'add_admin_styles' );
-
+/*
+ * change the label for title (for this custom post) from Title to Name
+ */
 add_filter( 'enter_title_here', 'custom_enter_title' );
 
 function custom_enter_title( $input ) {
@@ -439,6 +460,9 @@ function custom_enter_title( $input ) {
 
     return $input;
 }
+/* 
+ * returns list of states for use wherever
+ */
 function fs_states() {
     return array(
         "NSW"=>"New South Wales",
@@ -451,7 +475,9 @@ function fs_states() {
         "NT"=>"Northern Territory",
     );
 }
-
+/* 
+ * list of countries
+ */
 function fs_country() {
     return array(
         "AU"=>"Australia",
@@ -693,7 +719,9 @@ function fs_country() {
         "ZW"=>"Zimbabwe",
     );
 }
-
+/* 
+ * showing sigs to the public - called from ajax wrapper and also when loading page initially
+ */
 function get_sigs( $first_sig, $rows_per_page ){
     global $wpdb;
     $fs_country = fs_country();
@@ -721,7 +749,9 @@ function get_sigs( $first_sig, $rows_per_page ){
     }
     return $output;
 }
-
+/*
+ * AJAX wrapper to get sigs
+ */
 add_action( 'wp_ajax_get_sigs', 'fs_get_sigs' );
 add_action( 'wp_ajax_nopriv_get_sigs', 'fs_get_sigs' );
 
@@ -732,14 +762,21 @@ function fs_get_sigs() {
     echo json_encode( get_sigs( $first_sig, $rows_per_page) );
     die;
 }
-
+/*
+ * AJAX call to moderate a comment in a signature (i.e. approve it)
+ */
 add_action( 'wp_ajax_moderate', 'fs_moderate' );
 
 function fs_moderate() {
-    $id = $_POST['id'];
-    update_post_meta( $id, "fs_signature_moderate", "y" );
-    echo json_encode( array('success'=>true, 'id'=>$id ) );
-    die;
+    if(current_user_can('moderate_comments') ) {
+        $id = $_POST['id'];
+        update_post_meta( $id, "fs_signature_moderate", "y" );
+        echo json_encode( array('success'=>true, 'id'=>$id ) );
+        die;
+    } else {
+        echo json_encode( array( 'success'=>false, 'message'=>'Not logged in as admin') );
+        die;
+    }
 }
 
 function generateRandomString($length = 10) {
