@@ -117,6 +117,7 @@ if($secret!=="") {
                             </tbody></table>
                             <input name="action" value="confirmSignature" type="hidden">
                             <input name="id" value="<?=$sig->ID?>" type="hidden">
+                            <input name="secretkey" value="<?=$secret;?>" type="hidden">
                             <?php wp_nonce_field( "fs_confirm_sig_" . $sig->ID, "fs_nonce");?>
                         </form>
                     <?php } ?>
