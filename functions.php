@@ -47,8 +47,8 @@ function fs_newsletter_edit_columns($columns) {
         "title" => "Subject",
         "fs_col_post_type" => "Subscriber type",
         "fs_col_newsletter_type" => "Newsletter type",
-        "fs_col_country" => "Country",
-        "fs_col_state" => "State",
+        "fs_newsletter_country" => "Country",
+        "fs_newsletter_state" => "State",
     );
     return $columns;
 }
@@ -65,10 +65,10 @@ function fs_newsletter_custom_columns($column) {
         case "fs_col_newsletter_type":
             echo $custom["fs_newsletter_newsletter_type"][0];
             break;
-        case "fs_col_country":
+        case "fs_newsletter_country":
             echo $custom["fs_newsletter_country"][0];
             break;
-        case "fs_col_state":
+        case "fs_newsletter_state":
             echo ( $custom["fs_signature_country"][0]==="AU" ? $custom["fs_signature_state"][0] : "&nbsp;" );
             break;
     }
