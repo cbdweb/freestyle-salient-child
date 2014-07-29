@@ -90,7 +90,7 @@ if(!empty($options['cta-text']) && current_page_url() != $cta_link && !in_array(
 
 				<div class="col span_5">
 					<?php if(!get_current_user_id()) { ?>
-						<p><a href="<?php echo wp_login_url( "/account" ); ?>">Login</a>&nbsp;|&nbsp;<a href="/register">Join Freestyle Cyclists Inc</a></p>
+						<p><a href="<?php echo wp_login_url( "/account" ); ?>">Login</a>&nbsp;|&nbsp;<a href="<?=get_site_url();?>/membership-account/membership-levels/">Join Freestyle Cyclists Inc</a></p>
 					<?php } else { ?>
 						<P><a href="/account">Your account</a>&nbsp;|&nbsp;<a href="<?php echo wp_logout_url( "/" ); ?>">Logout</a></p>
 					<?php } ?>
