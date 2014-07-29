@@ -190,11 +190,11 @@ function newsletter_updated_messages( $messages ) {
 }
 /*
  * Give ourselves control over admin styles
- */
+
 add_action( 'wp_print_styles', 'my_deregister_styles', 100 );
 function my_deregister_styles() {
 	wp_deregister_style( 'wp-admin' );
-}
+}  */
 /*
  * label for title field on custom posts
  */

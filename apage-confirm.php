@@ -1,5 +1,5 @@
 <?php 
-/*template name: Confirm*/
+/*template name: aConfirm*/
 
 function confirm_register_js() {	
 	wp_register_script('confirm',  get_stylesheet_directory_uri() . '/js/confirm.js', 'jquery');
