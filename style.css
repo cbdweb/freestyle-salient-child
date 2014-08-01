@@ -31,6 +31,10 @@ body a {
     height: 10px;
 }
 .smallfont {
+    font-size: 10px;
+    line-height: 1.1 ! important;
+}
+.medfont {
     font-size: 12px;
-    line-height: 15px;
+    line-height: 1.2 ! important;
 }
