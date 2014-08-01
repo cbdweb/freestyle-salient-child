@@ -30,17 +30,3 @@ body a {
     margin-left: -9999px;
     height: 10px;
 }
-.smallfont {
-    font-size: 10px;
-    line-height: 1.1 ! important;
-}
-.medfont {
-    font-size: 12px;
-    line-height: 1.2 ! important;
-}
-.rightcol input.smallinput, .rightcol select.smallinput {
-    padding: 5px !important;
-}
-.leftcol {
-    vertical-align: middle;
-}
