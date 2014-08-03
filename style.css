@@ -30,3 +30,6 @@ body a {
     margin-left: -9999px;
     height: 10px;
 }
+article .post-title > a {
+    color: #FFFFFF !important;
+}
