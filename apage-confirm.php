@@ -17,6 +17,7 @@ $options = get_option('salient');
 $secret = $_GET['secret'];
 global $wpdb;
 $found = false;
+$update = true;  // prevent adwords conversion if there is no secret
 if($secret!=="") {
     $query = $wpdb->prepare ( "SELECT * FROM " . $wpdb->postmeta . " WHERE meta_value='%s' AND meta_key='fs_signature_secret'", $secret );
     $row = $wpdb->get_row( $query );
@@ -129,3 +130,24 @@ if($secret!=="") {
 
     </div>
 <?php get_footer();
+if ( ! $update ) { ?>
+
+    <!-- Google Code for new registration Conversion Page -->
+    <script type="text/javascript">
+    /* <![CDATA[ */
+    var google_conversion_id = 1000718227;
+    var google_conversion_language = "en";
+    var google_conversion_format = "1";
+    var google_conversion_color = "ffffff";
+    var google_conversion_label = "ga-OCK2vplYQk_-W3QM";
+    var google_remarketing_only = false;
+    /* ]]> */
+    </script>
+    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+    </script>
+    <noscript>
+    <div style="display:inline;">
+    <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/1000718227/?label=ga-OCK2vplYQk_-W3QM&amp;guid=ON&amp;script=0"/>
+    </div>
+</noscript>
+<?php }
