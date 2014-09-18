@@ -130,7 +130,6 @@ if($secret!=="") {
 
     </div>
 <?php get_footer();
-if ( ! $update ) { ?>
 
     <!-- Google Code for new registration Conversion Page -->
     <script type="text/javascript">
@@ -150,4 +149,3 @@ if ( ! $update ) { ?>
     <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/1000718227/?label=ga-OCK2vplYQk_-W3QM&amp;guid=ON&amp;script=0"/>
     </div>
 </noscript>
-<?php }
