@@ -129,7 +129,7 @@ if($secret!=="") {
         
 
     </div>
-<?php get_footer();
+<?php get_footer(); ?>
 
     <!-- Google Code for new registration Conversion Page -->
     <script type="text/javascript">
