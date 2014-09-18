@@ -1,5 +1,6 @@
 <?php 
 /*template name: aConfirm*/
+/* now not used - short code in fs-signatures plugin used instead */
 
 function confirm_register_js() {	
 	wp_register_script('confirm',  get_stylesheet_directory_uri() . '/js/confirm.js', 'jquery');
