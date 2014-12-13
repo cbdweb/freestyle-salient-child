@@ -47,3 +47,6 @@ body a {
 article .post-title > a {
     color: #FFFFFF !important;
 }
+.container-wrap {
+    margin-top: -100px !important;
+}
