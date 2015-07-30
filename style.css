@@ -50,3 +50,7 @@ article .post-title > a {
 .container-wrap {
     margin-top: -100px !important;
 }
+.cc-featured-image-caption {
+    margin-top: -20px;
+    font-size: 10px;
+}
