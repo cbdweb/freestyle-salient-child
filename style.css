@@ -54,3 +54,7 @@ article .post-title > a {
     margin-top: -20px;
     font-size: 10px;
 }
+div.sign_up table tbody tr td:first-child, div.sign_up table, div.sign_up table tbody td {
+    border: none !important;
+    text-align: left;
+}
