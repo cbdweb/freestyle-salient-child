@@ -10,3 +10,10 @@ function sign_up ( $content ) {
         do_shortcode ( '[signature narrow="1"]' ) .
         "</div>";
 }
+
+function my_pmpro_default_country($default)
+	{	
+		return "AU";
+	}
+
+add_filter("pmpro_default_country", "my_pmpro_default_country");
